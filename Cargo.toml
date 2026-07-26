@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+members = [
+    "BitCraftServer/packages/game",
+    "BitCraftServer/packages/game/bitcraft-macro",
+    "BitCraftServer/packages/global_module",
+]
