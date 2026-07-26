@@ -17,7 +17,7 @@ add_provenance_comment() {
 
     temporary_file="$(mktemp "${destination_file}.XXXXXX")"
     {
-        printf '// This file and its entire content is copied from %s to resolve symlinks.\n' "$source_path_from_root"
+        printf '// This file and its entire content was copied from %s to resolve symlinks.\n' "$source_path_from_root"
         cat -- "$destination_file"
     } > "$temporary_file"
     mv -- "$temporary_file" "$destination_file"
