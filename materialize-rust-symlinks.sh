@@ -9,6 +9,20 @@ fi
 
 root_dir="$(pwd -P)"
 
+add_provenance_comment() {
+    local source_file="$1"
+    local destination_file="$2"
+    local source_path_from_root="${source_file#"$root_dir"/}"
+    local temporary_file
+
+    temporary_file="$(mktemp "${destination_file}.XXXXXX")"
+    {
+        printf '// This file and its entire content is copied from %s to resolve symlinks.\n' "$source_path_from_root"
+        cat -- "$destination_file"
+    } > "$temporary_file"
+    mv -- "$temporary_file" "$destination_file"
+}
+
 while IFS= read -r -d '' link_file; do
     printf 'Checking: %s\n' "$link_file"
 
@@ -26,10 +40,21 @@ while IFS= read -r -d '' link_file; do
     (
         cd -- "$file_dir"
         if [[ -f "$target_path" ]]; then
-            cp -- "$target_path" "$file_name"
+            source_file="$(realpath -e -- "$target_path")"
+            cp -- "$source_file" "$file_name"
+
+            if [[ "$source_file" = *.rs ]]; then
+                add_provenance_comment "$source_file" "$file_name"
+            fi
         elif [[ -d "$target_path" ]]; then
+            source_directory="$(realpath -e -- "$target_path")"
             rm -- "$file_name"
-            cp -R -- "$target_path" "$file_name"
+            cp -R -- "$source_directory" "$file_name"
+
+            while IFS= read -r -d '' source_file; do
+                relative_source_path="${source_file#"$source_directory"/}"
+                add_provenance_comment "$source_file" "$file_name/$relative_source_path"
+            done < <(find "$source_directory" -type f -name '*.rs' -print0)
         fi
     )
 done < <(
