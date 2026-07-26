@@ -63,6 +63,7 @@ done < <(
         --glob '!**/target/**' \
         --glob '!.git/**' \
         --glob '!**/.git/**' \
+        --glob '!**/bitcraft-macro' \
         '(?s)\A[^\r\n]+(?:\r?\n)?\z' \
         "$root_dir"
 )
