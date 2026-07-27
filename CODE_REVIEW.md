@@ -6,7 +6,7 @@ Every static data table is defined in [game/src/messages/static_data.rs](BitCraf
 
 Every one of these tables uses an attribute proc macro defined in [bitcraft-macro/src/lib.rs](BitCraftServer/packages/game/bitcraft-macro/src/lib.rs#L13-L36) to add another `staged_` table with the same structure.
 
-The build script [game/build_shared.rs#L376-L553](BitCraftServer/packages/game/build_shared.rs#L376-L553) finds every one of these static data tables and generates the file [game/src/game/autogen/_static_data.rs](BitCraftServer/packages/game/src/game/autogen/_static_data.rs) which contains an admin-only reducer for each one of these static data tables to add data to them without validation.
+The build script [game/build_shared.rs](BitCraftServer/packages/game/build_shared.rs#L376-L553) finds every one of these static data tables and generates the file [game/src/game/autogen/_static_data.rs](BitCraftServer/packages/game/src/game/autogen/_static_data.rs) which contains an admin-only reducer for each one of these static data tables to add data to them without validation.
 
 There is also one reducer generated to clear every one of these tables and another one is generated to validate that none of the tables have 0 rows in them.
 
